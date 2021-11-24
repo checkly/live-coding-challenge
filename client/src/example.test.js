@@ -1,5 +1,5 @@
 const {init, server} = require('../../api/index');
-const {randomUUID} = require('crypto');
+const {v4: uuid} = require('uuid');
 let hapiServer;
 beforeAll(async () => {
     await init()
@@ -22,7 +22,7 @@ describe('GET /example/{id}/echo only accepts UUIDS as id', () => {
 
     test('when id is a valid UUID it returns the id', async () => {
 
-        const expectedUUID = randomUUID()
+        const expectedUUID = uuid()
         const res = await hapiServer.inject({
             method: 'get',
             url: `/example/${expectedUUID}/echo`
@@ -45,7 +45,7 @@ describe('/example/uuid CRUD tests', () => {
     test('creating&deleting a uuid', async () => {
         const initialLength = (await getAll()).length
 
-        const postObject = {uuid: randomUUID()}
+        const postObject = {uuid: uuid()}
         const res = await hapiServer.inject({
             method: 'POST',
             url: '/example/uuid/',
@@ -68,7 +68,7 @@ describe('/example/uuid CRUD tests', () => {
     })
 
     test('it returns 404 when deleting a non existent object', async () => {
-        const postObject = {uuid: randomUUID()}
+        const postObject = {uuid: uuid()}
         const deleteResponse = await hapiServer.inject({
             method: 'DELETE',
             url: `/example/uuid/${postObject.uuid}`,
